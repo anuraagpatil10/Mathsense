@@ -114,3 +114,25 @@ elif section == "Gaussian Naive Bayes":
     fig = generate_gaussian_nb_plot()
     st.pyplot(fig)
     st.info("Gaussian Naive Bayes assumes features follow a normal distribution. It's simple, fast, and surprisingly effective for text, spam filtering, and medical data.")
+    
+elif section == "Other":
+    st.header("Custom Visualization")
+    custom_prompt = st.text_input("Describe the mathematical concept you want to visualize")
+
+    if st.button("Generate Visualization"):
+        if custom_prompt:
+            with st.spinner("Generating visualization using Gemini..."):
+                try:
+                    from ai_backend import generate_visualization_code
+                    from executor import execute_script
+
+                    generated_code = generate_visualization_code(custom_prompt)
+                    st.session_state.generated_code = generated_code
+                    st.success("Visualization generated successfully!")
+                except Exception as e:
+                    st.error(f"Error while generating: {e}")
+
+    # Display AI-generated visualization if code exists
+    if st.session_state.get("generated_code"):
+        from executor import execute_script
+        execute_script(st.session_state.generated_code)
