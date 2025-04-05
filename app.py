@@ -8,7 +8,7 @@ from utils.bayes_theorem import generate_bayes_plot
 from utils.gradient_descent import generate_gradient_descent_plot
 from utils.logistic_regression import generate_logistic_regression_plot
 from utils.lasso_ridge_reg import generate_lasso_ridge_plot
-from utils.gaussian_naive_bayes import generate_gaussian_nb_plot
+from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
 
 st.set_page_config(page_title="MathSense", layout="centered")
 st.title("MathSense: Visualize Core Math Concepts")
@@ -117,9 +117,20 @@ elif section == "Lasso & Ridge Regression":
 
 elif section == "Gaussian Naive Bayes":
     st.header("Gaussian Naive Bayes Classifier")
-    fig = generate_gaussian_nb_plot()
-    st.pyplot(fig)
-    st.info("Gaussian Naive Bayes assumes features follow a normal distribution. It's simple, fast, and surprisingly effective for text, spam filtering, and medical data.")
+
+    correlation = st.slider("Adjust feature correlation", min_value=-0.9, max_value=0.9, value=0.0, step=0.1)
+    fig1, fig2, test_points, probs = generate_gaussian_nb_plots(correlation=correlation)
+
+    st.subheader("Decision Boundary")
+    st.pyplot(fig1)
+
+    st.subheader("Feature-wise Gaussian Distributions")
+    st.pyplot(fig2)
+
+    st.subheader("Posterior Probabilities for Sample Points")
+    for i, (point, prob) in enumerate(zip(test_points, probs)):
+        st.write(f"Test Point {i+1}: {point}")
+        st.write(f"→ P(Class 0): {prob[0]:.2f}, P(Class 1): {prob[1]:.2f}")
     
 elif section == "Other":
     st.header("Custom Visualization")
