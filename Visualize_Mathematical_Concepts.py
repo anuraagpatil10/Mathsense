@@ -1,3 +1,8 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
+from utils.neural_network import draw_neural_net
 import streamlit as st
 from utils.clt import generate_clt_plot
 from utils.lln import generate_lln_plot
@@ -9,7 +14,7 @@ from utils.bayes_theorem import generate_bayes_plot
 from utils.gradient_descent import plot_gradient_descent
 from utils.logistic_regression import plot_logistic_regression
 from utils.lasso_ridge_reg import plot_lasso_ridge
-# from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
+
 
 st.set_page_config(page_title="MathSense", layout="centered")
 st.title("MathSense: Visualize Core Math Concepts")
@@ -25,6 +30,7 @@ section = st.sidebar.selectbox("Choose a Concept", [
     "Logistic Regression",
     "Lasso & Ridge Regression",
     "Gaussian Naive Bayes",
+    "Neural Networks",
     "Other"
 ])
 
@@ -201,30 +207,81 @@ elif section == "Lasso & Ridge Regression":
 
     - Move the sliders to see how regularization affects prediction!
     """)
-# elif section == "Lasso & Ridge Regression":
-#     st.header("Lasso & Ridge Regression")
-#     regression_type = st.radio("Select Regression Type", ["Lasso", "Ridge"])
-#     alpha = st.slider("Regularization Strength (α)", 0.01, 10.0, 1.0)
-#     fig = generate_lasso_ridge_plot(regression_type, alpha)
-#     st.pyplot(fig)
-#     st.info("Lasso (L1) helps with feature selection by shrinking coefficients to zero, while Ridge (L2) reduces overfitting without removing features.")
 
-# elif section == "Gaussian Naive Bayes":
-#     st.header("Gaussian Naive Bayes Classifier")
+elif section == "Gaussian Naive Bayes":
+    st.header("Gaussian Naive Bayes Classifier")
 
-#     correlation = st.slider("Adjust feature correlation", min_value=-0.9, max_value=0.9, value=0.0, step=0.1)
-#     fig1, fig2, test_points, probs = generate_gaussian_nb_plots(correlation=correlation)
+    correlation = st.slider("Adjust feature correlation", min_value=-0.9, max_value=0.9, value=0.0, step=0.1)
+    fig1, fig2, test_points, probs = generate_gaussian_nb_plots(correlation=correlation)
 
-#     st.subheader("Decision Boundary")
-#     st.pyplot(fig1)
+    st.subheader("Decision Boundary")
+    st.pyplot(fig1)
 
-#     st.subheader("Feature-wise Gaussian Distributions")
-#     st.pyplot(fig2)
+    st.subheader("Feature-wise Gaussian Distributions")
+    st.pyplot(fig2)
 
-#     st.subheader("Posterior Probabilities for Sample Points")
-#     for i, (point, prob) in enumerate(zip(test_points, probs)):
-#         st.write(f"Test Point {i+1}: {point}")
-#         st.write(f"→ P(Class 0): {prob[0]:.2f}, P(Class 1): {prob[1]:.2f}")
+    st.subheader("Posterior Probabilities for Sample Points")
+    for i, (point, prob) in enumerate(zip(test_points, probs)):
+        st.write(f"Test Point {i+1}: {point}")
+        st.write(f"→ P(Class 0): {prob[0]:.2f}, P(Class 1): {prob[1]:.2f}")
+
+#neural network
+elif section == "Neural Networks":
+    st.header("Neural Network Visualizer")
+
+    input_dim = st.slider("Number of Inputs", 1, 5, 2)
+    num_layers = st.slider("Number of Hidden Layers", 1, 5, 1)
+    units_per_layer = st.slider("Neurons per Hidden Layer", 1, 5, 3)
+    output_dim = st.slider("Number of Outputs", 1, 2, 1)
+    activation = st.selectbox("Activation Function", ["sigmoid", "relu"])
+
+    test_input = [st.slider(f"Input x{i + 1}", -5.0, 5.0, 0.0) for i in range(input_dim)]
+
+    layer_sizes = [input_dim] + [units_per_layer] * num_layers + [output_dim]
+
+    st.subheader("🔧 Manually Adjust Weights and Biases")
+
+    weights = []
+    biases = []
+
+    for i in range(len(layer_sizes) - 1):
+        st.markdown(f"**Layer {i + 1} Weights ({layer_sizes[i]} → {layer_sizes[i + 1]})**")
+        weight_matrix = []
+        for j in range(layer_sizes[i]):
+            row = []
+            for k in range(layer_sizes[i + 1]):
+                val = st.slider(f"W{i}_{j}_{k}", -5.0, 5.0, 0.1, step=0.1, key=f"w_{i}_{j}_{k}")
+                row.append(val)
+            weight_matrix.append(row)
+        weights.append(np.array(weight_matrix))
+
+        st.markdown(f"**Layer {i + 1} Biases**")
+        bias_vector = []
+        for k in range(layer_sizes[i + 1]):
+            b_val = st.slider(f"b{i}_{k}", -5.0, 5.0, 0.1, step=0.1, key=f"b_{i}_{k}")
+            bias_vector.append(b_val)
+        biases.append(np.array(bias_vector))
+
+
+    def compute_activations(X, weights, biases, activation_fn):
+        activations = [X]
+        a = X
+        for w, b in zip(weights, biases):
+            z = np.dot(a, w) + b
+            if activation_fn == "sigmoid":
+                a = 1 / (1 + np.exp(-z))
+            elif activation_fn == "relu":
+                a = np.maximum(0, z)
+            activations.append(a.flatten())
+        return activations
+
+
+    activations = compute_activations(np.array([test_input]), weights, biases, activation)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    draw_neural_net(ax, layer_sizes, weights=weights, biases=biases, activations=activations)
+    st.pyplot(fig)
+
     
 elif section == "Other":
     st.header("Custom Visualization")
