@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.clt import generate_clt_plot
 from utils.lln import generate_lln_plot
-from utils.pca import generate_pca_plot
+from utils.pca import generate_pca_comparison_plot
 from utils.mmse import generate_mmse_plot
 from utils.poly_reg import generate_polynomial_regression_plot
 from utils.bayes_theorem import generate_bayes_plot
@@ -50,15 +50,21 @@ elif section == "Law of Large Numbers":
     st.info("LLN explains why more data leads to stable ML results.")
 
 # === Section: PCA ===
+
 elif section == "Principal Component Analysis":
-    st.header("Principal Component Analysis")
-    n_samples = st.slider("Number of Samples", 100, 1000, 300)
-    n_features = st.slider("Number of Features", 2, 10, 5)
-    n_components = st.selectbox("Components to Visualize", [2, "All"])
-    n_comp_val = n_features if n_components == "All" else 2
-    fig = generate_pca_plot(n_samples, n_features, n_comp_val)
+    st.header("Principal Component Analysis (PCA)")
+
+    n_components = st.slider("Select number of components", min_value=1, max_value=3, value=2)
+    fig = generate_pca_comparison_plot(n_components=n_components)
     st.pyplot(fig)
-    st.info("PCA is used in image compression, finance, and ML feature reduction.")
+
+    st.info(f"""
+    PCA reduces data dimensions by projecting it to directions of maximum variance.
+
+    - **Original plot** (left) shows real 3D data
+    - **Right plot** shows projection into {n_components}D space
+    - **Variance retained**: Higher components = more information
+    """)
 
 # === Section: MMSE ===
 elif section == "Minimum Mean Square Error":
