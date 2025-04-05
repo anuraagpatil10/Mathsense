@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from ai_backend import is_visualizable_math_concept
 from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
 from utils.neural_network import draw_neural_net
 import streamlit as st
@@ -240,7 +240,7 @@ elif section == "Neural Networks":
 
     layer_sizes = [input_dim] + [units_per_layer] * num_layers + [output_dim]
 
-    st.subheader("🔧 Manually Adjust Weights and Biases")
+    st.subheader("Manually Adjust Weights and Biases")
 
     weights = []
     biases = []
@@ -297,7 +297,10 @@ elif section == "Other":
 
                     generated_code = generate_visualization_code(custom_prompt)
                     st.session_state.generated_code = generated_code
-                    st.success("Visualization generated successfully!")
+                    if is_visualizable_math_concept(custom_prompt):
+                        st.success("Visualization generated successfully!")
+                    else:
+                        st.success("The entered topic doesn't appear to be a visualizable mathematical concept.")
                     execute_script(generated_code)
                 except Exception as e:
                     st.error(f"Error while generating: {e}")

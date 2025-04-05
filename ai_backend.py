@@ -25,7 +25,7 @@ def is_visualizable_math_concept(user_prompt):
 def generate_visualization_code(user_prompt, csv_sample=None):
     if not is_visualizable_math_concept(user_prompt):
         return (
-            "# ❌ The entered topic doesn't appear to be a visualizable mathematical concept.\n"
+            "# The entered topic doesn't appear to be a visualizable mathematical concept.\n"
             "# Please try a topic that can be represented with a chart, graph, or simulation."
         )
     
