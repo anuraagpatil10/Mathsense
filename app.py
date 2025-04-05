@@ -8,7 +8,7 @@ from utils.linear_regression import plot_linear_regression
 from utils.bayes_theorem import generate_bayes_plot
 from utils.gradient_descent import generate_gradient_descent_plot
 from utils.logistic_regression import plot_logistic_regression
-from utils.lasso_ridge_reg import generate_lasso_ridge_plot
+from utils.lasso_ridge_reg import plot_lasso_ridge
 from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
 
 st.set_page_config(page_title="MathSense", layout="centered")
@@ -152,13 +152,41 @@ elif section == "Logistic Regression":
     - Try dragging the test point to see predicted probability!
     """)
 
+# Lasso & Ridge regression
 elif section == "Lasso & Ridge Regression":
     st.header("Lasso & Ridge Regression")
-    regression_type = st.radio("Select Regression Type", ["Lasso", "Ridge"])
-    alpha = st.slider("Regularization Strength (α)", 0.01, 10.0, 1.0)
-    fig = generate_lasso_ridge_plot(regression_type, alpha)
+
+    model_type = st.radio("Choose Model", ["Ridge", "Lasso"])
+    mode = st.radio("Mode", ["Train with data", "Manual weights/bias"])
+
+    test_x = st.slider("Test Point X", 0.0, 2.0, 1.0, step=0.1)
+
+    if mode == "Train with data":
+        alpha = st.slider("Regularization Strength (alpha)", 0.01, 10.0, 1.0, step=0.1)
+        fig = plot_lasso_ridge(reg_type=model_type.lower(), alpha=alpha, manual=False, test_x=test_x)
+    else:
+        w = st.slider("Weight (w)", -10.0, 10.0, 1.0, step=0.1)
+        b = st.slider("Bias (b)", -10.0, 10.0, 0.0, step=0.1)
+        fig = plot_lasso_ridge(reg_type=model_type.lower(), manual=True, w=w, b=b, test_x=test_x)
+
     st.pyplot(fig)
-    st.info("Lasso (L1) helps with feature selection by shrinking coefficients to zero, while Ridge (L2) reduces overfitting without removing features.")
+
+    st.info(f"""
+    **{model_type} Regression**
+
+    - Adds regularization to the linear model:
+    - Ridge: $L2$ penalty ($\\alpha ||w||^2$)
+    - Lasso: $L1$ penalty ($\\alpha ||w||_1$)
+
+    - Move the sliders to see how regularization affects prediction!
+    """)
+# elif section == "Lasso & Ridge Regression":
+#     st.header("Lasso & Ridge Regression")
+#     regression_type = st.radio("Select Regression Type", ["Lasso", "Ridge"])
+#     alpha = st.slider("Regularization Strength (α)", 0.01, 10.0, 1.0)
+#     fig = generate_lasso_ridge_plot(regression_type, alpha)
+#     st.pyplot(fig)
+#     st.info("Lasso (L1) helps with feature selection by shrinking coefficients to zero, while Ridge (L2) reduces overfitting without removing features.")
 
 elif section == "Gaussian Naive Bayes":
     st.header("Gaussian Naive Bayes Classifier")
