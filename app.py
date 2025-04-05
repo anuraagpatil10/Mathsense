@@ -6,7 +6,7 @@ from utils.mmse import generate_mmse_plot
 # from utils.poly_reg import generate_polynomial_regression_plot
 from utils.linear_regression import plot_linear_regression
 from utils.bayes_theorem import generate_bayes_plot
-from utils.gradient_descent import generate_gradient_descent_plot
+from utils.gradient_descent import plot_gradient_descent
 from utils.logistic_regression import plot_logistic_regression
 from utils.lasso_ridge_reg import plot_lasso_ridge
 from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
@@ -113,13 +113,34 @@ elif section == "Bayes’ Theorem":
     st.pyplot(fig)
     st.info("Bayes’ Theorem is used in spam filters, medical diagnosis, and probabilistic AI models.")
 
+# Gradient Descent
 elif section == "Gradient Descent":
-    st.header("Gradient Descent")
-    learning_rate = st.slider("Learning Rate (α)", 0.001, 0.1, 0.01)
-    epochs = st.slider("Number of Epochs", 10, 200, 50)
-    fig = generate_gradient_descent_plot(learning_rate, epochs)
+    st.header("Gradient Descent (Linear Regression)")
+
+    mode = st.radio("Choose Mode", ["Train with Gradient Descent", "Manual weights/bias"])
+    test_x = st.slider("Test Point X", 0.0, 2.0, 1.0, step=0.1)
+
+    if mode == "Train with Gradient Descent":
+        learning_rate = st.slider("Learning Rate", 0.001, 1.0, 0.1, step=0.01)
+        iterations = st.slider("Iterations", 1, 100, 10, step=1)
+        fig = plot_gradient_descent(learning_rate=learning_rate, iterations=iterations, manual=False, test_x=test_x)
+    else:
+        w = st.slider("Weight (w)", -10.0, 10.0, 1.0, step=0.1)
+        b = st.slider("Bias (b)", -10.0, 10.0, 0.0, step=0.1)
+        fig = plot_gradient_descent(manual=True, w=w, b=b, test_x=test_x)
+
     st.pyplot(fig)
-    st.info("Gradient Descent is how machine learning models minimize error and improve accuracy over time.")
+
+    st.info(r"""
+    **Gradient Descent** updates weights to minimize loss:
+
+    \[
+    w := w - \eta \cdot \frac{\partial L}{\partial w}, \quad b := b - \eta \cdot \frac{\partial L}{\partial b}
+    \]
+
+    - Adjust learning rate to see fast/slow convergence.
+    - Try manual mode to simulate learning step-by-step!
+    """)
 
 # Logistic regression
 elif section == "Logistic Regression":
