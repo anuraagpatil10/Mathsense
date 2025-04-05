@@ -1,17 +1,19 @@
-import streamlit as st
+import io
+import matplotlib.pyplot as plt
+import contextlib
 
-def execute_script(script: str):
+def execute_script(code: str):
+
+    local_env = {}
+    plot_buffer = io.StringIO()
+
     try:
-        # Safe built-in functions only
-        safe_globals = {
-            "__builtins__": __builtins__,
-            "st": st,
-            "range": range,
-            "len": len,
-            "sum": sum,
-            "min": min,
-            "max": max,
-        }
-        exec(script, safe_globals)
+        plt.close("all")  # ← clear any previous figures to avoid duplicate/ghost plots
+        with contextlib.redirect_stdout(plot_buffer):
+            exec(code, {"plt": plt}, local_env)
+
+        fig = plt.gcf()
+        return {"plot": fig}
+
     except Exception as e:
-        st.error(f"Execution failed: {e}")
+        return {"error": f"Execution failed: {str(e)}"}
