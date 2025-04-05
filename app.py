@@ -3,7 +3,8 @@ from utils.clt import generate_clt_plot
 from utils.lln import generate_lln_plot
 from utils.pca import generate_pca_comparison_plot
 from utils.mmse import generate_mmse_plot
-from utils.poly_reg import generate_polynomial_regression_plot
+# from utils.poly_reg import generate_polynomial_regression_plot
+from utils.linear_regression import plot_linear_regression
 from utils.bayes_theorem import generate_bayes_plot
 from utils.gradient_descent import generate_gradient_descent_plot
 from utils.logistic_regression import plot_logistic_regression
@@ -18,7 +19,7 @@ section = st.sidebar.selectbox("Choose a Concept", [
     "Law of Large Numbers",
     "Principal Component Analysis",
     "Minimum Mean Square Error",
-    "Polynomial Regression",
+    "Linear Regression",
     "Bayes’ Theorem",
     "Gradient Descent",
     "Logistic Regression",
@@ -74,13 +75,34 @@ elif section == "Minimum Mean Square Error":
     st.pyplot(fig)
     st.info("MMSE is used to clean noisy data in signals, finance, and ML regression.")
 
-elif section == "Polynomial Regression":
-    st.header("Polynomial Regression")
-    degree = st.slider("Polynomial Degree", 1, 10, 3)
-    noise_level = st.slider("Noise Level", 0.1, 2.0, 0.5)
-    fig = generate_polynomial_regression_plot(degree, noise_level)
+# Linear regression
+elif section == "Linear Regression":
+    st.header("Linear Regression")
+
+    st.subheader("Model Settings")
+    mode = st.radio("Choose Mode", ["Train with data", "Manual weights/bias"])
+
+    test_x = st.slider("Test Point X", 0.0, 2.0, 1.0, step=0.1)
+
+    if mode == "Train with data":
+        fig = plot_linear_regression(manual=False, test_x=test_x)
+    else:
+        w = st.slider("Weight (w)", -10.0, 10.0, 1.0, step=0.1)
+        b = st.slider("Bias (b)", -10.0, 10.0, 0.0, step=0.1)
+        fig = plot_linear_regression(manual=True, w=w, b=b, test_x=test_x)
+
     st.pyplot(fig)
-    st.info("Polynomial Regression is used in finance, weather forecasting, and data trend analysis.")
+
+    st.info(r"""
+    **Linear Regression** predicts a target value using:
+
+    \[
+    y = wx + b
+    \]
+
+    - Adjust `w` and `b` manually to understand model behavior
+    - Move the test point and watch the predicted output change!
+    """)
 
 elif section == "Bayes’ Theorem":
     st.header("Bayes' Theorem Visualization")

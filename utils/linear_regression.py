@@ -1,30 +1,38 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
-def generate_polynomial_regression_plot(degree, noise_level):
-    # Generate synthetic data
+def plot_linear_regression(C=1.0, manual=False, w=1.0, b=0.0, test_x=0.0):
+    # Generate synthetic linear data
     np.random.seed(42)
-    X = np.linspace(-3, 3, 100).reshape(-1, 1)
-    y_true = X**3 - 2*X**2 + X  # True underlying function
-    y_noisy = y_true + np.random.normal(0, noise_level, X.shape)  # Add noise
+    X = 2 * np.random.rand(100, 1)
+    y = 4 + 3 * X[:, 0] + np.random.randn(100)
 
-    # Fit Polynomial Regression
-    poly = PolynomialFeatures(degree=degree)
-    X_poly = poly.fit_transform(X)
-    model = LinearRegression().fit(X_poly, y_noisy)
+    # Reshape
+    X_reshaped = X.reshape(-1, 1)
 
-    # Predict
-    y_pred = model.predict(X_poly)
+    # Train or manual
+    if manual:
+        y_pred = w * X[:, 0] + b
+        test_y = w * test_x + b
+    else:
+        model = LinearRegression()
+        model.fit(X_reshaped, y)
+        w = model.coef_[0]
+        b = model.intercept_
+        y_pred = model.predict(X_reshaped)
+        test_y = model.predict([[test_x]])[0]
 
     # Plot
     fig, ax = plt.subplots()
-    ax.scatter(X, y_noisy, color='gray', label="Noisy Data", alpha=0.5)
-    ax.plot(X, y_true, label="True Function", linestyle="dashed", color="black")
-    ax.plot(X, y_pred, label=f"Polynomial Regression (Degree {degree})", color="blue")
-    ax.set_title("Polynomial Regression Curve Fitting")
+    ax.scatter(X, y, color='blue', alpha=0.5, label='Data')
+    ax.plot(X, y_pred, color='red', linewidth=2, label='Prediction Line')
+    ax.plot(test_x, test_y, 'yo', markersize=10, label=f"Predicted: {test_y:.2f}")
     ax.set_xlabel("X")
-    ax.set_ylabel("Y")
+    ax.set_ylabel("y")
+    ax.set_title("Linear Regression")
     ax.legend()
+
     return fig
+
+
