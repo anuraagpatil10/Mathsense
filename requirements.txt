@@ -5,3 +5,5 @@ scipy
 scikit-learn
 google-generativeai
 dotenv
+plotly
+seaborn

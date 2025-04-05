@@ -9,7 +9,7 @@ from utils.bayes_theorem import generate_bayes_plot
 from utils.gradient_descent import plot_gradient_descent
 from utils.logistic_regression import plot_logistic_regression
 from utils.lasso_ridge_reg import plot_lasso_ridge
-from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
+# from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
 
 st.set_page_config(page_title="MathSense", layout="centered")
 st.title("MathSense: Visualize Core Math Concepts")
@@ -209,22 +209,22 @@ elif section == "Lasso & Ridge Regression":
 #     st.pyplot(fig)
 #     st.info("Lasso (L1) helps with feature selection by shrinking coefficients to zero, while Ridge (L2) reduces overfitting without removing features.")
 
-elif section == "Gaussian Naive Bayes":
-    st.header("Gaussian Naive Bayes Classifier")
+# elif section == "Gaussian Naive Bayes":
+#     st.header("Gaussian Naive Bayes Classifier")
 
-    correlation = st.slider("Adjust feature correlation", min_value=-0.9, max_value=0.9, value=0.0, step=0.1)
-    fig1, fig2, test_points, probs = generate_gaussian_nb_plots(correlation=correlation)
+#     correlation = st.slider("Adjust feature correlation", min_value=-0.9, max_value=0.9, value=0.0, step=0.1)
+#     fig1, fig2, test_points, probs = generate_gaussian_nb_plots(correlation=correlation)
 
-    st.subheader("Decision Boundary")
-    st.pyplot(fig1)
+#     st.subheader("Decision Boundary")
+#     st.pyplot(fig1)
 
-    st.subheader("Feature-wise Gaussian Distributions")
-    st.pyplot(fig2)
+#     st.subheader("Feature-wise Gaussian Distributions")
+#     st.pyplot(fig2)
 
-    st.subheader("Posterior Probabilities for Sample Points")
-    for i, (point, prob) in enumerate(zip(test_points, probs)):
-        st.write(f"Test Point {i+1}: {point}")
-        st.write(f"→ P(Class 0): {prob[0]:.2f}, P(Class 1): {prob[1]:.2f}")
+#     st.subheader("Posterior Probabilities for Sample Points")
+#     for i, (point, prob) in enumerate(zip(test_points, probs)):
+#         st.write(f"Test Point {i+1}: {point}")
+#         st.write(f"→ P(Class 0): {prob[0]:.2f}, P(Class 1): {prob[1]:.2f}")
     
 elif section == "Other":
     st.header("Custom Visualization")
@@ -232,7 +232,7 @@ elif section == "Other":
 
     if st.button("Generate Visualization"):
         if custom_prompt:
-            with st.spinner("Generating visualization using Gemini..."):
+            with st.spinner("Generating visualization..."):
                 try:
                     from ai_backend import generate_visualization_code
                     from executor import execute_script
@@ -240,10 +240,11 @@ elif section == "Other":
                     generated_code = generate_visualization_code(custom_prompt)
                     st.session_state.generated_code = generated_code
                     st.success("Visualization generated successfully!")
+                    execute_script(generated_code)
                 except Exception as e:
                     st.error(f"Error while generating: {e}")
 
     # Display AI-generated visualization if code exists
-    if st.session_state.get("generated_code"):
-        from executor import execute_script
-        execute_script(st.session_state.generated_code)
+    # if st.session_state.get("generated_code"):
+    #     from executor import execute_script
+    #     execute_script(st.session_state.generated_code)
