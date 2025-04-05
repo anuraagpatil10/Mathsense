@@ -6,7 +6,7 @@ from utils.mmse import generate_mmse_plot
 from utils.poly_reg import generate_polynomial_regression_plot
 from utils.bayes_theorem import generate_bayes_plot
 from utils.gradient_descent import generate_gradient_descent_plot
-from utils.logistic_regression import generate_logistic_regression_plot
+from utils.logistic_regression import plot_logistic_regression
 from utils.lasso_ridge_reg import generate_lasso_ridge_plot
 from utils.gaussian_naive_bayes import generate_gaussian_nb_plots
 
@@ -99,13 +99,36 @@ elif section == "Gradient Descent":
     st.pyplot(fig)
     st.info("Gradient Descent is how machine learning models minimize error and improve accuracy over time.")
 
+# Logistic regression
 elif section == "Logistic Regression":
     st.header("Logistic Regression")
-    activation = st.radio("Choose Activation Function", ["sigmoid", "relu"])
-    fig = generate_logistic_regression_plot(activation)
+
+    st.subheader("Model Settings")
+
+    mode = st.radio("Choose Mode", ["Train with data", "Manual weights/bias"])
+
+    test_x = st.slider("Test Point X", -5.0, 5.0, 0.0, step=0.1)
+    test_y = st.slider("Test Point Y", -5.0, 5.0, 0.0, step=0.1)
+
+    if mode == "Train with data":
+        C = st.slider("Regularization Strength (C)", min_value=0.01, max_value=10.0, value=1.0, step=0.1)
+        fig = plot_logistic_regression(C=C, manual=False, test_point=(test_x, test_y))
+    else:
+        w0 = st.slider("Weight w0 (X1)", -5.0, 5.0, 1.0, step=0.1)
+        w1 = st.slider("Weight w1 (X2)", -5.0, 5.0, 1.0, step=0.1)
+        bias = st.slider("Bias", -5.0, 5.0, 0.0, step=0.1)
+        fig = plot_logistic_regression(manual=True, w0=w0, w1=w1, bias=bias, test_point=(test_x, test_y))
+
     st.pyplot(fig)
-    st.info(
-        "Logistic Regression with sigmoid is classic, but ReLU shows what happens with alternative activation in binary classification.")
+
+    st.info("""
+    Logistic regression estimates the probability that a point belongs to a class using the sigmoid function:
+
+    \n$P(y=1|x) = \\frac{1}{1 + e^{-(w^T x + b)}}$
+
+    - Adjust weights and bias to understand their effect
+    - Try dragging the test point to see predicted probability!
+    """)
 
 elif section == "Lasso & Ridge Regression":
     st.header("Lasso & Ridge Regression")
