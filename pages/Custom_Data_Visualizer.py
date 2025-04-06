@@ -5,6 +5,35 @@ from executor import execute_script
 import io
 st.set_page_config(page_title="MathSense | Custom Data", layout="centered")
 
+st.markdown("""
+    <style>
+        body, .stApp {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+
+        .css-1cpxqw2, .stRadio > div {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .stRadio > div label {
+            color: white !important;
+        }
+
+        .stSidebar {
+            background-color: #1e2a38 !important;
+        }
+
+        h1, h2, h3, h4, h5, h6, .stMarkdown, .stSelectbox label, .stSlider label {
+            color: white !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
+
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 user_prompt = st.text_input("Describe the mathematical concept to visualize (e.g., PCA, Regression, etc.)")
 

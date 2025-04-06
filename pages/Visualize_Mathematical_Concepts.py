@@ -16,8 +16,40 @@ from utils.logistic_regression import plot_logistic_regression
 from utils.lasso_ridge_reg import plot_lasso_ridge
 
 
+
+
+
 st.set_page_config(page_title="MathSense", layout="centered")
 st.title("MathSense: Visualize Core Math Concepts")
+
+st.markdown("""
+    <style>
+        body, .stApp {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+
+        .css-1cpxqw2, .stRadio > div {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .stRadio > div label {
+            color: white !important;
+        }
+
+        .stSidebar {
+            background-color: #1e2a38 !important;
+        }
+
+        h1, h2, h3, h4, h5, h6, .stMarkdown, .stSelectbox label, .stSlider label {
+            color: white !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
 
 section = st.sidebar.selectbox("Choose a Concept", [
     "Central Limit Theorem",
