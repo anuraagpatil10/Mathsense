@@ -4,7 +4,7 @@
 
 ---
 
-## 🚀 Features
+## Features
 
 - **AI-Powered Code Generation**: Describe any concept like "Central Limit Theorem" or "KMeans Clustering" and let AI write the Python code for visualization.
 - **Live Plot Rendering**: Visualize concepts directly using Python libraries such as Matplotlib and Seaborn.
@@ -14,14 +14,14 @@
 
 ---
 
-## 🧠 Use Cases
+## Use Cases
 
 - Visualizing probability distributions, regression, clustering, etc.
 - Learning or teaching data science, statistics, or applied math through visuals.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend/UI**: Streamlit
 - **AI Backend**: Gemini 1.5 Pro API
@@ -30,7 +30,7 @@
 
 ---
 
-## ⚙️ Installation & Running Locally
+## Installation & Running Locally
 
 1. **Clone the repository**
 ```bash
